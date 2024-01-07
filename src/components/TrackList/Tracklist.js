@@ -2,11 +2,15 @@ import React from "react";
 
 import Track from "../Track/Track";
 
-const TrackList = () => {
+const TrackList = (props) => {
     return (
        <div>
 
-           <Track />
+           {
+            props.tracks.map(track => 
+                <Track {...track}/>
+            )
+           }
        
        </div> 
     );

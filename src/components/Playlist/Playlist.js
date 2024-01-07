@@ -2,13 +2,20 @@ import React from "react";
 
 import TrackList from "../TrackList/Tracklist";
 
-const Playlist = () => {
-
+const Playlist = (props) => {
+    
+  
     return (
     <div>
     <input />
     <TrackList 
-    
+        tracks={[
+            {
+                album: "ALBUMNAME",
+                artist: "ARTISTNAME",
+                name: "TITLE",
+            },
+        ]}
     
     
     />

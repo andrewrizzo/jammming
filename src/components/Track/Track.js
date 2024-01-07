@@ -1,11 +1,13 @@
 import React from "react";
 
-const Track = () => {
+const Track = (props) => {
     return (
     <div>
       <h3>Name</h3>
       <div>
-        <p> artist name</p>
+        <p>{props.artist}</p>
+        <p>{props.name}</p>
+        <p>{props.album}</p>
       </div>
 
 
