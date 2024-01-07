@@ -56,6 +56,7 @@ function App() {
   }, [playlistName, playlist, setPlaylist, setPlaylistName]);
 
   const createNewPlaylist = useCallback(() => {
+  
     setPlaylist({ tracks: [], uri: '' });
   }, [setPlaylist]);
 
@@ -77,7 +78,6 @@ function App() {
         })
       })
   }, [playlist, setPlaylist])
-
   return (
     <div className="App">
       <h1>jammming</h1>
