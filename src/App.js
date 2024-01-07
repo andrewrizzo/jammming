@@ -29,8 +29,10 @@ function App() {
   });
 
   const getPlaylists = useCallback(() => {
-    // Spotify.getPlaylists().then(result => result.text().then(text => console.log(text)));
-  });
+    Spotify.getPlaylists()
+      .then(async result => await result.text()
+      .then(text => setPlaylists(JSON.parse(text).items)));
+  }, [setPlaylists]);
 
   const savePlaylist = useCallback(() => {
     Spotify.savePlaylist(playlistName, playlist.map(track => track.uri));
@@ -59,6 +61,19 @@ function App() {
           savePlaylist
         }}
       />
+
+      <div>
+        <h2>My Playlists</h2>
+        {
+          playlists && playlists.map
+            ? playlists.map(playlist => 
+              <div>
+                {playlist.name}
+              </div>  
+            )
+            : <></>
+        }
+      </div>
           </div>
       </div> 
     </div>
