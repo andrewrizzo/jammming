@@ -8,6 +8,7 @@ import SearchResults from './components/SearchResults/SeachResults';
 import Spotify from './uitl/Spotify';
 
 function App() {
+  const [playlistName, setPlaylistName] = useState('');
   const [playlists, setPlaylists] = useState([]);
   const [results, setResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
@@ -28,8 +29,14 @@ function App() {
   });
 
   const getPlaylists = useCallback(() => {
-    Spotify.getPlaylists().then(result => result.text().then(text => console.log(text)));
+    // Spotify.getPlaylists().then(result => result.text().then(text => console.log(text)));
   });
+
+  const savePlaylist = useCallback(() => {
+    Spotify.savePlaylist(playlistName, playlist.map(track => track.uri));
+    setPlaylist([]);
+    setPlaylistName('');
+  }, [playlistName, playlist, setPlaylist, setPlaylistName]);
 
   useEffect(() => {
     getPlaylists();
@@ -43,7 +50,14 @@ function App() {
     <div>
       <SearchResults {...{ results, addTrackToPlaylist }} />
       <Playlist
-        {...{playlist, setPlaylist, removeTrackFromPlaylist}}
+        {...{
+          playlist,
+          setPlaylist,
+          removeTrackFromPlaylist,
+          playlistName,
+          setPlaylistName,
+          savePlaylist
+        }}
       />
           </div>
       </div> 

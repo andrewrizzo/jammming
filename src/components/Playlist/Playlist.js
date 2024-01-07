@@ -3,14 +3,21 @@ import React from "react";
 import TrackList from "../TrackList/Tracklist";
 
 const Playlist = (props) => {
-    const { playlist, setPlaylist, removeTrackFromPlaylist } = props;
+    const {
+        playlist,
+        setPlaylist,
+        removeTrackFromPlaylist,
+        playlistName,
+        setPlaylistName,
+        savePlaylist,
+    } = props;
     return (
     <div>
-    <input />
+    <input value={playlistName} onChange={e => setPlaylistName(e.target.value)} />
     <TrackList
         {...{ tracks: playlist, setPlaylist, removeTrackFromPlaylist, showDeleteButton: true }}
     />
-    <button>
+    <button onClick={() => savePlaylist()}>
     SAVE TO SPOTIFY  
     </button>
     </div>
