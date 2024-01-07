@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -8,6 +8,7 @@ import SearchResults from './components/SearchResults/SeachResults';
 import Spotify from './uitl/Spotify';
 
 function App() {
+  const [playlists, setPlaylists] = useState([]);
   const [results, setResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
   const [playlist, setPlaylist] = useState([]);
@@ -25,6 +26,15 @@ function App() {
   const search = useCallback(() => {
     Spotify.search(searchTerm).then(result => setResults(result));
   });
+
+  const getPlaylists = useCallback(() => {
+    Spotify.getPlaylists().then(result => result.text().then(text => console.log(text)));
+  });
+
+  useEffect(() => {
+    getPlaylists();
+  }, [getPlaylists])
+
   return (
     <div className="App">
       <h1>jammming</h1>
