@@ -82,21 +82,22 @@ const Spotify = {
 
     const accessToken = Spotify.getAccessToken();
     const headers = { Authorization: `Bearer ${accessToken}` };
-    await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
-      headers: headers,
-      method: 'PUT',
-      body: JSON.stringify({
-        name: options.name,
-      }),
-    }).then(response => response.json());
-
+    
     await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
       headers: headers,
       method: 'PUT',
       body: JSON.stringify({
         uris: options.tracks.map(track => track.uri),
       }),
-    }).then(response => response.json());
+    });
+
+    await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
+      headers: headers,
+      method: 'PUT',
+      body: JSON.stringify({
+        name: options.name,
+      }),
+    });
   },
 
   getPlaylists() {

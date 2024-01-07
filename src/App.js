@@ -21,9 +21,8 @@ function App() {
       uri: '',
     }
   );
-  useEffect(() => {console.log({playlist})}, [playlist])
   const removeTrackFromPlaylist = useCallback((index) => {
-    setPlaylist({ ...playlist, tracks: playlist.tracks.pop(index) });
+    setPlaylist({ ...playlist, tracks: playlist.tracks.filter((t, i) => index !== i) });
   }, [playlist, setPlaylist]);
   
   const addTrackToPlaylist = useCallback((index) => {
@@ -50,7 +49,7 @@ function App() {
 
   const savePlaylist = useCallback(() => {
     if (playlist.uri === '')
-      Spotify.savePlaylist(playlistName, playlist.tracks.map(track => track.uri))
+      Spotify.savePlaylist(playlistName, playlist.tracks.map(track => track.uri).join(','))
       else Spotify.changePlaylist(playlist.id, { ...playlist, name: playlistName })
     setPlaylist({ tracks: [], uri: '' });
     setPlaylistName('');
