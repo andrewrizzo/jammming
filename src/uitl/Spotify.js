@@ -73,25 +73,30 @@ const Spotify = {
     });
   },
 
-  changePlaylist(uri, options) {
-    if (!uri || !options) {
+  async changePlaylist(id, options) {
+    if (!id || !options) {
       return;
     }
 
+    console.log({options})
+
     const accessToken = Spotify.getAccessToken();
     const headers = { Authorization: `Bearer ${accessToken}` };
-    let userId;
+    await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
+      headers: headers,
+      method: 'PUT',
+      body: JSON.stringify({
+        name: options.name,
+      }),
+    }).then(response => response.json());
 
-    return fetch('https://api.spotify.com/v1/me', {headers: headers}
-    ).then(response => response.json()
-    ).then(jsonResponse => {
-      userId = jsonResponse.id;
-      return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
-        headers: headers,
-        method: 'PUT',
-        body: JSON.stringify(options)
-      }).then(response => response.json());
-    });
+    await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
+      headers: headers,
+      method: 'PUT',
+      body: JSON.stringify({
+        uris: options.tracks.map(track => track.uri),
+      }),
+    }).then(response => response.json());
   },
 
   getPlaylists() {
@@ -107,6 +112,13 @@ const Spotify = {
           method: 'GET',
         })
     })
+  },
+
+  fetch(url, method = 'GET') {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    return fetch(url, { headers: headers, method: method }
+    ).then(response => response.json())
   },
 };
 

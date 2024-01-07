@@ -5,9 +5,17 @@ const Track = (props) => {
     <div>
       <h3>Name</h3>
       <div>
-        <p>{props.artist}</p>
+        <p>{
+          !!props.artists
+            ? props.artists[0].name
+            : props.artist
+        }</p>
         <p>{props.name}</p>
-        <p>{props.album}</p>
+        <p>{
+          typeof props.album === "object"
+            ? props.album.name
+            : props.album
+        }</p>
       </div>
 
       {

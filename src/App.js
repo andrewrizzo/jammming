@@ -1,5 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import logo from './logo.svg';
+import React, { useState, useCallback, useEffect } from 'react';
 import './App.css';
 
 import Playlist from './components/Playlist/Playlist';
@@ -9,19 +8,34 @@ import Spotify from './uitl/Spotify';
 
 function App() {
   const [playlistName, setPlaylistName] = useState('');
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState(
+    {
+      items: [],
+    }
+  );
   const [results, setResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
-  const [playlist, setPlaylist] = useState([]);
+  const [playlist, setPlaylist] = useState(
+    {
+      tracks: [],
+      uri: '',
+    }
+  );
+  useEffect(() => {console.log({playlist})}, [playlist])
   const removeTrackFromPlaylist = useCallback((index) => {
-    setPlaylist(playlist.pop(index));
-  }, [playlist]);
+    setPlaylist({ ...playlist, tracks: playlist.tracks.pop(index) });
+  }, [playlist, setPlaylist]);
   
   const addTrackToPlaylist = useCallback((index) => {
-    setPlaylist([
-      ...playlist,
-      results[index],
-    ]);
+    setPlaylist(
+      {
+        ...playlist,
+        tracks: [
+          ...playlist.tracks,
+          results[index],
+        ],
+      }
+    );
   }, [results]);
   
   const search = useCallback(() => {
@@ -31,18 +45,39 @@ function App() {
   const getPlaylists = useCallback(() => {
     Spotify.getPlaylists()
       .then(async result => await result.text()
-      .then(text => setPlaylists(JSON.parse(text).items)));
+      .then(text => setPlaylists(JSON.parse(text))));
   }, [setPlaylists]);
 
   const savePlaylist = useCallback(() => {
-    Spotify.savePlaylist(playlistName, playlist.map(track => track.uri));
-    setPlaylist([]);
+    if (playlist.uri === '')
+      Spotify.savePlaylist(playlistName, playlist.tracks.map(track => track.uri))
+      else Spotify.changePlaylist(playlist.id, { ...playlist, name: playlistName })
+    setPlaylist({ tracks: [], uri: '' });
     setPlaylistName('');
   }, [playlistName, playlist, setPlaylist, setPlaylistName]);
 
+  const createNewPlaylist = useCallback(() => {
+    setPlaylist({ tracks: [], uri: '' });
+  }, [setPlaylist]);
+
+  const setActivePlaylist = useCallback((i) => {
+    setPlaylist(playlists.items[i]);
+    setPlaylistName(playlists.items[i].name);
+  }, [setPlaylist, playlists]);
+
   useEffect(() => {
     getPlaylists();
-  }, [getPlaylists])
+  }, [getPlaylists]);
+
+  useEffect(() => {
+    if(!!playlist && !!playlist.tracks && !!playlist.tracks.href)
+      Spotify.fetch(playlist.tracks.href).then(async result => {
+        setPlaylist({
+          ...playlist,
+          tracks: result.items ? result.items.map(item => item.track) : []
+        })
+      })
+  }, [playlist, setPlaylist])
 
   return (
     <div className="App">
@@ -53,7 +88,7 @@ function App() {
       <SearchResults {...{ results, addTrackToPlaylist }} />
       <Playlist
         {...{
-          playlist,
+          ...(!!playlist ? { playlist: playlist.tracks } : { playlist: [] }),
           setPlaylist,
           removeTrackFromPlaylist,
           playlistName,
@@ -65,14 +100,23 @@ function App() {
       <div>
         <h2>My Playlists</h2>
         {
-          playlists && playlists.map
-            ? playlists.map(playlist => 
-              <div>
+          playlists.items && playlists.items.map
+            ? playlists.items.map((playlist, i) => 
+              <div key={i}>
+                <button onClick={() => setActivePlaylist(i)}>
+                  Select
+                </button>
                 {playlist.name}
               </div>  
             )
             : <></>
         }
+        <div>
+        <button onClick={createNewPlaylist}>
+          new playlist
+        </button>
+
+        </div>
       </div>
           </div>
       </div> 
