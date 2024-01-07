@@ -13,7 +13,7 @@ const Playlist = (props) => {
     } = props;
     return (
     <div>
-    <input value={playlistName} onChange={e => setPlaylistName(e.target.value)} />
+    <input   placeholder=" new playlist Name" value={playlistName} onChange={e => setPlaylistName(e.target.value)} />
     <TrackList
         {...{ tracks: playlist, setPlaylist, removeTrackFromPlaylist, showDeleteButton: true }}
     />
