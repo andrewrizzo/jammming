@@ -1,6 +1,7 @@
 import React from "react";
 
 const Track = (props) => {
+  console.log({props})
     return (
     <div>
       <h3>Name</h3>
@@ -10,6 +11,17 @@ const Track = (props) => {
         <p>{props.album}</p>
       </div>
 
+      {
+        props.showDeleteButton
+          ? <button onClick={() => props.removeTrackFromPlaylist(props.index)}>Remove</button>
+          : <></>
+      }
+
+      {
+        props.showAddToPlaylistButton
+          ? <button onClick={() => props.addTrackToPlaylist(props.index)}>Add</button>
+          : <></>
+      }
 
     </div>
     );

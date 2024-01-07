@@ -11,6 +11,13 @@ function App() {
   const [results, setResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
   const [playlist, setPlaylist] = useState([]);
+  const removeTrackFromPlaylist = useCallback((index) => {
+    alert(`removed ${index}`)
+  }, []);
+  
+  const addTrackToPlaylist = useCallback((index) => {
+    alert(`added ${index}`)
+  }, []);
   
   const search = useCallback(() => {
     Spotify.search().then(result => {setResults(result); console.log({result})})
@@ -21,10 +28,9 @@ function App() {
     <div>
       <SearchBar {...{ setSearchTerm, search }} />
     <div>
-      <SearchResults {...{ results }} />
-      <Playlist 
-      {...{playlist}}
-      
+      <SearchResults {...{ results, addTrackToPlaylist }} />
+      <Playlist
+        {...{playlist: results, setPlaylist, removeTrackFromPlaylist}}
       />
           </div>
       </div> 

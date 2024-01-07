@@ -3,21 +3,12 @@ import React from "react";
 import TrackList from "../TrackList/Tracklist";
 
 const Playlist = (props) => {
-    
-  
+    const { playlist, setPlaylist, removeTrackFromPlaylist } = props;
     return (
     <div>
     <input />
-    <TrackList 
-        tracks={[
-            {
-                album: "ALBUMNAME",
-                artist: "ARTISTNAME",
-                name: "TITLE",
-            },
-        ]}
-    
-    
+    <TrackList
+        {...{ tracks: playlist, setPlaylist, removeTrackFromPlaylist, showDeleteButton: true }}
     />
     <button>
     SAVE TO SPOTIFY  

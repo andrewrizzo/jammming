@@ -3,13 +3,25 @@ import React from "react";
 import Track from "../Track/Track";
 
 const TrackList = (props) => {
+    const { removeTrackFromPlaylist, showDeleteButton, showAddToPlaylistButton, addTrackToPlaylist } = props;
     return (
        <div>
 
            {
-            props.tracks.map(track => 
-                <Track {...track}/>
-            )
+            props.tracks.map((track, i) => 
+                <Track 
+                    { ...{
+                        ...track,
+                        removeTrackFromPlaylist,
+                        showDeleteButton,
+                        showAddToPlaylistButton,
+                        addTrackToPlaylist,
+                    } }
+                    index={i}
+                    key={i}
+                />
+                
+             )
            }
        
        </div> 
